@@ -1,0 +1,6 @@
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Release\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Release\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Release\Packet.dll
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\obj\x86\Release\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\obj\x86\Release\ChattingServer.pdb

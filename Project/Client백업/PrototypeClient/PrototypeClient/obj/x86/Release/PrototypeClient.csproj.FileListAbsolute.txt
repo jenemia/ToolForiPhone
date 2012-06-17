@@ -1,0 +1,10 @@
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\bin\Release\PrototypeClient.exe
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\bin\Release\PrototypeClient.pdb
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\bin\Release\Packet.dll
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\PrototypeClient.Client.resources
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\PrototypeClient.Properties.Resources.resources
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\GenerateResource.read.1.tlog
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\GenerateResource.write.1.tlog
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\PrototypeClient.exe
+C:\Users\Administrator\Documents\develop\Project\PrototypeClient\PrototypeClient\obj\x86\Release\PrototypeClient.pdb

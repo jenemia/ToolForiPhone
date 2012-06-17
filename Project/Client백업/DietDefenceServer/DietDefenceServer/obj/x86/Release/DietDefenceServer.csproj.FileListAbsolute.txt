@@ -1,0 +1,7 @@
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\bin\Release\DietDefenceServer.exe
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\bin\Release\DietDefenceServer.pdb
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\bin\Release\DBAdapter.dll
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\bin\Release\Packet.dll
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\obj\x86\Release\DietDefenceServer.exe
+C:\Users\Administrator\Documents\develop\Project\DietDefenceServer\DietDefenceServer\obj\x86\Release\DietDefenceServer.pdb

@@ -1,0 +1,17 @@
+C:\Users\Administrator\Documents\develop\Console\ChattingServer\ChattingServer\bin\Debug\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\Console\ChattingServer\ChattingServer\bin\Debug\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\Console\ChattingServer\ChattingServer\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develop\Console\ChattingServer\ChattingServer\obj\x86\Debug\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\Console\ChattingServer\ChattingServer\obj\x86\Debug\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\WinForm\ChattingServer\ChattingServer\obj\x86\Debug\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\WinForm\ChattingServer\ChattingServer\obj\x86\Debug\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\WinForm\ChattingServer\ChattingServer\bin\Debug\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\WinForm\ChattingServer\ChattingServer\bin\Debug\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\WinForm\ChattingServer\ChattingServer\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\obj\x86\Debug\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\obj\x86\Debug\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Debug\ChattingServer.exe
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Debug\ChattingServer.pdb
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Debug\Packet.dll
+C:\Users\Administrator\Documents\develop\Project\ChattingServer\ChattingServer\bin\Debug\DBAdapter.dll
