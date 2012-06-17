@@ -1,5 +1,0 @@
-C:\Users\Administrator\Documents\develop\Project\DBAdapter\DBAdapter\bin\Release\DBAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\DBAdapter\DBAdapter\bin\Release\DBAdapter.pdb
-C:\Users\Administrator\Documents\develop\Project\DBAdapter\DBAdapter\obj\Release\ResolveAssemblyReference.cache
-C:\Users\Administrator\Documents\develop\Project\DBAdapter\DBAdapter\obj\Release\DBAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\DBAdapter\DBAdapter\obj\Release\DBAdapter.pdb
