@@ -32,7 +32,6 @@ namespace PrototypeClient
         private Thread mThreadStart;
 
         Singleton mSingleton;
-        //ServerAdapter mTestServerAdapter;
 
         public Client()
         {
@@ -43,7 +42,6 @@ namespace PrototypeClient
         {
             //ServerAdapter 생성
             this.mSingleton = new Singleton();
-            //this.mTestServerAdapter = new ServerAdapter();
             
             
             //Server 접속 실패시 프로그램 종료
@@ -96,7 +94,6 @@ namespace PrototypeClient
             this.mMyPacket.Room = this.mRoom;
             //서버에게 게임이 시작한다는 것을 알려줌.
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
-            //this.mServerAdapter.Send(this.mMyPacket);
         }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
@@ -107,7 +104,6 @@ namespace PrototypeClient
         private void SetPlayer()
         {
             this.mMyPacket.State = (int)state.login;
-            //this.mTestServerAdapter.Send(this.mMyPacket);
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
 
 
@@ -234,7 +230,6 @@ namespace PrototypeClient
                 try
                 {
                     this.mYourPacket.InitPacket();
-                    //this.mYourPacket = this.mServerAdapter.Receive();
                     this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
 
                     if ((int)state.stop == this.mYourPacket.State)
@@ -332,7 +327,6 @@ namespace PrototypeClient
             this.mMyPacket.Room = this.mRoom;
             this.mMyPacket.State = (int)state.play;
 
-            //this.mServerAdapter.Send(this.mMyPacket);
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
                
             this.mMyPacket.InitPacket();
@@ -352,7 +346,6 @@ namespace PrototypeClient
 
                 try
                 {
-                    //this.mYourPacket = this.mServerAdapter.Receive();
                     this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
 
                     if (this.mYourPacket.State == (int)state.init)
@@ -390,7 +383,6 @@ namespace PrototypeClient
             this.mMyPacket.Player = this.mPlayer;
 
             //서버에게 게임이 시작한다는 것을 알려줌.
-            //this.mServerAdapter.Send(this.mMyPacket);
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
             this.mMyPacket.InitPacket();
         }

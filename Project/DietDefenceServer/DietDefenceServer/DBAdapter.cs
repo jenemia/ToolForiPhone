@@ -25,7 +25,7 @@ namespace ChattingServer
             try
             {
                 string _str = String.Format(@"server=myungjun.org;user=jenemia;password=soohyun;database=jenemia");
-                mConn = new MySqlConnection(_str);
+                this.mConn = new MySqlConnection(_str);
             }
             catch( Exception )
             {
@@ -41,7 +41,7 @@ namespace ChattingServer
 
             MySqlCommand _command;
             _command = new MySqlCommand();
-            _command.Connection = mConn;
+            _command.Connection = this.mConn;
             _command.CommandText = _sql;
             MySqlDataReader _reader = _command.ExecuteReader();
 
@@ -53,6 +53,8 @@ namespace ChattingServer
                 _result = UserTable(_reader);
             else if (table.Equals("stage"))
                 _result = StageTable(_reader);
+            else if (table.Equals("userJoin"))
+                _result = JoinTable(_reader);
 
             _reader.Close();
             return _result;
@@ -163,19 +165,43 @@ namespace ChattingServer
 
             return _result;
         }
+
+        private ArrayList JoinTable(MySqlDataReader reader)
+        {
+            ArrayList _result = new ArrayList();
+            Hashtable _hash;
+            try
+            {
+                while (reader.Read())
+                {
+                    _hash = new Hashtable();
+                    _hash.Add("name", reader["name"]);
+                    _hash.Add("passwd", reader["passwd"]);
+                    _hash.Add("win", reader["win"]);
+                    _hash.Add("lose", reader["lose"]);
+
+                    _result.Add(_hash);
+                }
+            }
+            catch
+            {
+            }
+
+            return _result;
+        }
         /*
          * table : "joinUser"
-         * attributes : "name,passwd"
+         * attributes : "id,passwd"
          * values : "soohyun,1234"
          */
         public bool InsertTuple( string table, string attributes, string values )
         {
-            string _sql = "insert into " + table + "(" + attributes + ")" +
+            string _sql = "insert into " + table + " (" + attributes + ") " +
                 "values (" + values + ");";
 
             MySqlCommand _command;
             _command = new MySqlCommand();
-            _command.Connection = mConn;
+            _command.Connection = this.mConn;
             _command.CommandText = _sql;
             MySqlDataReader _reader = _command.ExecuteReader();
             return true;

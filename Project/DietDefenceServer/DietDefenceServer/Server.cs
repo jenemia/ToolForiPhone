@@ -26,7 +26,7 @@ namespace ChattingServer
 
         public bool mExit = false;
 
-        private DBAdapter mDBAdapter;
+        public DBAdapter mDBAdapter;
         private ArrayList mEnemyList;
         private ArrayList mTowerList;
         private ArrayList mUserList;

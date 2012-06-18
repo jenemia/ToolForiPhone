@@ -14,9 +14,11 @@ namespace PrototypeClient
 {
     public partial class Join : Form
     {
+        Singleton mSingleton;
         public Join()
         {
             InitializeComponent();
+            this.mSingleton = new Singleton();
         }
 
         private void buttonJoin_Click(object sender, EventArgs e)
@@ -26,11 +28,26 @@ namespace PrototypeClient
             if (_id.Equals("") || _pw.Equals(""))
                 MessageBox.Show("ID or Password 입력하세요");
 
+
+            JoinPacket _join = new JoinPacket();
+            _join.State = (int)state.join;
+            _join.ID = _id;
+            _join.PW = _pw;
+
+            this.mSingleton.ServerAdapter.Send(_join);
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
+            ActiveForm.Visible = false;
+            Client dlg = new Client();
+            dlg.ShowDialog();
+            this.Visible = false;
+        }
 
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
     public class Singleton

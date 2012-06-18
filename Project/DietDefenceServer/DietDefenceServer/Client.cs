@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Runtime.Serialization;
 using PacketNamespace;
+using System.Collections;
 
 namespace ChattingServer
 {   
@@ -10,6 +11,7 @@ namespace ChattingServer
         private Server mServer;
         public Socket mClient;
         private Packet mPacket;
+        private JoinPacket mJoinPacket;
 
         public int mPlayer;
         public int mRoom;
@@ -39,7 +41,12 @@ namespace ChattingServer
                     if (null != temp)
                         this.mPacket = temp;
 
-                    if ( (int)state.login == this.mPacket.State) //Client가 처음 실행 되었을 때
+                    if( (int)state.join == this.mPacket.State)
+                    {
+                        this.JoinToDB(_buffer);
+
+                    }
+                    else if ( (int)state.login == this.mPacket.State) //Client가 처음 실행 되었을 때
                     {
                         this.mPacket.Player = Server.mCnt;
                         this.SelectRoom();
@@ -136,6 +143,22 @@ namespace ChattingServer
                     break;
                 }
             }
+        }
+
+        /*
+         * table : "joinUser"
+         * attributes : " name,passwd "
+         * values : " "soohyun" , "1234" "
+         */
+        private bool JoinToDB( byte[] buffer )
+        {
+            this.mJoinPacket = (JoinPacket)Packet.Deserialize(buffer);
+            String _id = this.mJoinPacket.ID;
+            String _pw = this.mJoinPacket.PW;
+            String _value = "\"" + _id + "\"" + "," + "\"" + _pw + "\"";
+
+            this.mServer.mDBAdapter.InsertTuple("joinUser", "id,passwd", _value);
+            return true;
         }
     }
 }

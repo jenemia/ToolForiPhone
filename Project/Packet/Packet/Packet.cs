@@ -155,4 +155,29 @@ namespace PacketNamespace
             }*/
         }
     }
+
+    [Serializable]
+    public class JoinPacket : Packet
+    {
+        private string mID;
+        private string mPW;
+
+        public JoinPacket()
+        {
+            this.mID = "";
+            this.mPW = "";
+        }
+
+        public string ID
+        {
+            set { mID = value; }
+            get { return mID; }
+        }
+
+        public string PW
+        {
+            set { mPW = value; }
+            get { return mPW; }
+        }
+    }
 }
