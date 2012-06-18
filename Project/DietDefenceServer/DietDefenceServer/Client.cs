@@ -95,7 +95,7 @@ namespace ChattingServer
                         this.SelectRoom();
 
                         Console.WriteLine("{0}번방 {1}번째 플레이어 입장", this.mPacket.Room, this.mPacket.Player);
-                        //id,pw도 추가
+                        //DB에 있던 초기화 정보들을 패킷에 넣는다.
                         this.mPacket.EnemyList = this.mServer.EnemyList;
                         this.mPacket.TowerList = this.mServer.TowerList;
                         this.mPacket.User = this.mServer.UserList;

@@ -32,12 +32,13 @@ namespace PacketNamespace
         private ArrayList mEnemyList;
         private ArrayList mUserList;
         private ArrayList mStageList;
+        private ArrayList mMissileList;
 
         private int mPlayer;
         private int mAllPlayer;
         private int mRoom;
         private int mPosition;
-        private string mID;
+        private string mID;        
 
         private int mState;
         private int mResult;
@@ -47,6 +48,7 @@ namespace PacketNamespace
             this.mTowerList = new ArrayList();
             this.mEnemyList = new ArrayList();
             this.mUserList = new ArrayList();
+            this.mMissileList = new ArrayList();
             this.mState = (int)state.init;
 
             this.mPlayer = 0;
@@ -78,6 +80,12 @@ namespace PacketNamespace
         {
             set { mUserList = value;}
             get { return mUserList; }
+        }
+
+        public ArrayList MissileList
+        {
+            set { mMissileList = value;}
+            get { return mMissileList; }
         }
 
         public int Player
