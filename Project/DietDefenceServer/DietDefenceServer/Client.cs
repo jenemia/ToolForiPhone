@@ -38,8 +38,9 @@ namespace ChattingServer
          * 2.lgoin  : 로그인 - 성공, 실패 패킷 보냄
          * 3.setting: 처음 client가 접속했을 때 - list 초기화 data 및 player, room 보냄
          * 4.start  : Clinet가 2명 접속해서 게임 시작을 알릴 때
-         * 5.exit   : Clinet종료를 알릴 때
-         * 6.play   : Game을 진행할 때
+         * 5.stop   : 게임 종료를 알릴 때
+         * 6.exit   : Clinet종료를 알릴 때
+         * 7.play   : Game을 진행할 때
          */ 
         public void Receive()
         {
