@@ -79,9 +79,9 @@ namespace ServerAdapterNamespace
 
                 while (true)
                 {
+                    Thread.Sleep(30);
                     if (this.mConnected == false)
                         break;
-                    Thread.Sleep(30);
 
                     try
                     {

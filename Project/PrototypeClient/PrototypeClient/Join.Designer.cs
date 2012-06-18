@@ -113,6 +113,7 @@
             this.Controls.Add(this.textBoxID);
             this.Name = "Join";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Join_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -53,6 +53,7 @@ namespace PrototypeClient
                 ActiveForm.Visible = false;
                 Client dlg = new Client();
                 dlg.ShowDialog();
+                this.Close();
             }
         }
 
@@ -88,12 +89,18 @@ namespace PrototypeClient
                 ActiveForm.Visible = false;
                 Client dlg = new Client();
                 dlg.ShowDialog();
+                this.Close();
             }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void Join_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.mSingleton.ServerAdapter.ExitServer();
         }
     }
     public class Singleton
@@ -102,6 +109,10 @@ namespace PrototypeClient
         public Singleton()
         {
             mServerAdapter = new ServerAdapter();
+        }
+
+        ~Singleton()
+        {
         }
         public ServerAdapter ServerAdapter
         {

@@ -32,7 +32,8 @@ namespace PrototypeClient
         //private Thread mThreadReceive;
         private Thread mThreadStart;
 
-        Singleton mSingleton;
+        //Singleton mSingleton;
+        ServerAdapter mServerAdapter;
 
         public Client()
         {
@@ -42,11 +43,13 @@ namespace PrototypeClient
         private void Form1_Load(object sender, EventArgs e)
         {
             //ServerAdapter 생성
-            this.mSingleton = new Singleton();
+            //this.mSingleton = new Singleton();
+            this.mServerAdapter = Singleton.mServerAdapter;
             
             
             //Server 접속 실패시 프로그램 종료
-            if( false == this.mSingleton.ServerAdapter.mConnected )
+            //if( false == this.mSingleton.ServerAdapter.mConnected )
+            if( false == this.mServerAdapter.mConnected)
             {
                 MessageBox.Show("Server와 연결이 안되어 종료됩니다.");
                 Close();
@@ -89,8 +92,10 @@ namespace PrototypeClient
             this.mMyPacket.State = (int)state.exit; //게임 종료
             this.mMyPacket.Player = this.mPlayer;
             this.mMyPacket.Room = this.mRoom;
-            this.mSingleton.ServerAdapter.Send(this.mMyPacket);
-            this.mSingleton.ServerAdapter.ExitServer();
+            //this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            //this.mSingleton.ServerAdapter.ExitServer();
+            this.mServerAdapter.Send(this.mMyPacket);
+            this.mServerAdapter.ExitServer();
          }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
@@ -101,7 +106,8 @@ namespace PrototypeClient
         private void SetPlayer()
         {
             this.mMyPacket.State = (int)state.setting;
-            this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            //this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            this.mServerAdapter.Send(this.mMyPacket);
 
             Thread.Sleep(10);
 
@@ -109,8 +115,8 @@ namespace PrototypeClient
             {
                 try
                 {
-                    //this.mYourPacket = this.mTestServerAdapter.Receive();
-                    this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
+                    this.mYourPacket = this.mServerAdapter.Receive();
+                    //this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
 
                     if (this.mYourPacket.Player != 0)
                         break;
@@ -236,11 +242,12 @@ namespace PrototypeClient
                 try
                 {
                     this.mYourPacket.InitPacket();
-                    this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
+                    //this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
+                    this.mYourPacket = this.mServerAdapter.Receive();
                     
-                    if ((int)state.exit == this.mYourPacket.State || (int)state.stop == this.mYourPacket.State) //상대방이 종료 될때 멈추기
+                    if ((int)state.exit == this.mYourPacket.State || (int)state.stop == this.mYourPacket.State)
                     {//상대방이 나갔을 때 또는 게임이 끝나서 멈출때
-                        this.mPosition = this.mYourPacket.Position;
+                        this.mPosition = this.mYourPacket.Position;                        
                         
                         this.mStart = false;
                         timer1.Stop();
@@ -338,7 +345,8 @@ namespace PrototypeClient
             this.mMyPacket.State = (int)state.play;
             this.mMyPacket.ID = this.mID;
 
-            this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            //this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            this.mServerAdapter.Send(this.mMyPacket);
                
             this.mMyPacket.InitPacket();
         }
@@ -357,7 +365,8 @@ namespace PrototypeClient
 
                 try
                 {
-                    this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
+                    //this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
+                    this.mYourPacket = this.mServerAdapter.Receive();
 
                     if (this.mYourPacket.State == (int)state.init)
                         continue;
@@ -394,10 +403,12 @@ namespace PrototypeClient
             this.mMyPacket.Player = this.mPlayer;
 
             //서버에게 게임이 시작한다는 것을 알려줌.
-            this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            //this.mSingleton.ServerAdapter.Send(this.mMyPacket);
+            this.mServerAdapter.Send(this.mMyPacket);
             this.mMyPacket.InitPacket();
         }
 
+        //게임 종료 후 승패 판단을 위한 부분. 테스트를 위해 버튼으로 함.
         private void button2_Click(object sender, EventArgs e)//Win
         {
             resultPacket _result = new resultPacket();
@@ -409,7 +420,8 @@ namespace PrototypeClient
             _result.WinPlayerID = "jenemia";
             _result.LosePlayerID = "isu";
 
-            this.mSingleton.ServerAdapter.Send(_result);
+            //this.mSingleton.ServerAdapter.Send(_result);
+            this.mServerAdapter.Send(_result);
 
             this.mMyPacket.InitPacket();
         }
