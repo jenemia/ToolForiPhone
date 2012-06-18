@@ -20,8 +20,15 @@ namespace PacketNamespace
         stop,
         play,
         exit,
+        error
+    }
+
+    public enum accountState
+    {
+        init = 0,
         join,
         login,
+        result,
         error
     }
 
@@ -202,6 +209,31 @@ namespace PacketNamespace
         {
             set { mJoinPW = value; }
             get { return mJoinPW; }
+        }
+    }
+
+    [Serializable]
+    public class resultPacket : Packet
+    {
+        private string mWinPlayerID;
+        private string mLosePlayerID;
+
+        public resultPacket()
+        {
+            this.mWinPlayerID = "";
+            this.mLosePlayerID = "";
+        }
+
+        public string WinPlayerID
+        {
+            set { mWinPlayerID = value;}
+            get { return mWinPlayerID; }
+        }
+
+        public string LosePlayerID
+        {
+            set { mLosePlayerID = value;}
+            get { return mLosePlayerID; }
         }
     }
 }

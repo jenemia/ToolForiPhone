@@ -30,7 +30,7 @@ namespace PrototypeClient
 
 
             JoinPacket _join = new JoinPacket();
-            _join.State = (int)state.join;
+            _join.State = (int)accountState.join;
             _join.JoinID = _id;
             _join.JoinPW = _pw;
 
@@ -40,7 +40,7 @@ namespace PrototypeClient
             while(true)
             {
                 _result = (Packet)this.mSingleton.ServerAdapter.Receive();
-                if( (int)state.join == _result.State || (int)state.error == _result.State)
+                if ((int)accountState.join == _result.State || (int)accountState.error == _result.State)
                     break;
             }
 
@@ -65,7 +65,7 @@ namespace PrototypeClient
 
 
             JoinPacket _login = new JoinPacket();
-            _login.State = (int)state.login;
+            _login.State = (int)accountState.login;
             _login.JoinID = _id;
             _login.JoinPW = _pw;
 
@@ -75,11 +75,11 @@ namespace PrototypeClient
             while (true)
             {
                 _result = (Packet)this.mSingleton.ServerAdapter.Receive();
-                if ((int)state.login == _result.State || (int)state.error == _result.State)
+                if ((int)accountState.login == _result.State || (int)state.error == _result.State)
                     break;
             }
 
-            if ((int)state.error == _result.State)
+            if ((int)accountState.error == _result.State)
             {
                 MessageBox.Show("id,passwd 확인 또는 이미 로그인한 id가 존재");
             }

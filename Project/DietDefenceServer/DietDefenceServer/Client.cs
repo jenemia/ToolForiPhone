@@ -53,38 +53,38 @@ namespace ChattingServer
                     if (null != temp)
                         this.mPacket = temp;
 
-                    if( (int)state.join == this.mPacket.State) 
+                    if ((int)accountState.join == this.mPacket.State) 
                     {//join 신청할 때
                         if( !this.JoinToDB(_buffer) )
                         {//회원가입 실패 했을 때
-                            this.mPacket.State = (int)state.error;
+                            this.mPacket.State = (int)accountState.error;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }
                         else
                         {//성공했을 때
-                            this.mPacket.State = (int)state.join;
+                            this.mPacket.State = (int)accountState.join;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }
                     }
-                    else if( (int)state.login == this.mPacket.State )
+                    else if ((int)accountState.login == this.mPacket.State)
                     {//로그인 시도
                         if (!this.LoginToDB(_buffer))
                         {//로그인실패 했을 때
-                            this.mPacket.State = (int)state.error;
+                            this.mPacket.State = (int)accountState.error;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }
                         else if( !this.mServer.CheckClinetsID(this.mID, this))
                         {//이미 로그인한 id가 있을 때
-                            this.mPacket.State = (int)state.error;
+                            this.mPacket.State = (int)accountState.error;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }
                         else 
                         {//성공했을 때
-                            this.mPacket.State = (int)state.login;
+                            this.mPacket.State = (int)accountState.login;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }

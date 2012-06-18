@@ -90,11 +90,11 @@ namespace PrototypeClient
             if (this.mThreadStart != null && this.mThreadStart.IsAlive)
                 this.mThreadStart.Abort();
 
+            //클라이언트가 종료 된다고 서버에게 알림
             this.mMyPacket.InitPacket();
-            this.mMyPacket.State = (int)state.exit; //게임 종료를 알림
+            this.mMyPacket.State = (int)state.exit; //게임 종료
             this.mMyPacket.Player = this.mPlayer;
             this.mMyPacket.Room = this.mRoom;
-            //서버에게 게임이 시작한다는 것을 알려줌.
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
         }
 
@@ -107,7 +107,6 @@ namespace PrototypeClient
         {
             this.mMyPacket.State = (int)state.setting;
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
-
 
             Thread.Sleep(10);
 
