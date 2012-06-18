@@ -15,6 +15,8 @@ namespace ChattingServer
 
         public int mPlayer;
         public int mRoom;
+        public string mID;
+        public string mPW;
         
         public Client( Server server, Socket client)
         {
@@ -41,18 +43,43 @@ namespace ChattingServer
                     if (null != temp)
                         this.mPacket = temp;
 
-                    if( (int)state.join == this.mPacket.State)
-                    {
-                        this.JoinToDB(_buffer);
-
+                    if( (int)state.join == this.mPacket.State) 
+                    {//join 신청할 때
+                        if( !this.JoinToDB(_buffer) )
+                        {//회원가입 실패 했을 때
+                            this.mPacket.State = (int)state.error;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            Send(_buffer);
+                        }
+                        else
+                        {//성공했을 때
+                            this.mPacket.State = (int)state.join;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            Send(_buffer);
+                        }
                     }
-                    else if ( (int)state.login == this.mPacket.State) //Client가 처음 실행 되었을 때
+                    else if( (int)state.login == this.mPacket.State )
+                    {//로그인 시도
+                        if (this.LoginToDB(_buffer)) //로그인 성공
+                        {//성공했을 때
+                            this.mPacket.State = (int)state.login;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            Send(_buffer);
+                        }
+                        else //실패
+                        {//로그인실패 했을 때
+                            this.mPacket.State = (int)state.error;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            Send(_buffer);
+                        }
+                     }
+                    else if ( (int)state.setting == this.mPacket.State) //Client가 처음 실행 되었을 때
                     {
                         this.mPacket.Player = Server.mCnt;
                         this.SelectRoom();
 
                         Console.WriteLine("{0}번방 {1}번째 플레이어 입장", this.mPacket.Room, this.mPacket.Player);
-
+                        //id,pw도 추가
                         this.mPacket.EnemyList = this.mServer.EnemyList;
                         this.mPacket.TowerList = this.mServer.TowerList;
                         this.mPacket.User = this.mServer.UserList;
@@ -153,12 +180,39 @@ namespace ChattingServer
         private bool JoinToDB( byte[] buffer )
         {
             this.mJoinPacket = (JoinPacket)Packet.Deserialize(buffer);
-            String _id = this.mJoinPacket.ID;
-            String _pw = this.mJoinPacket.PW;
-            String _value = "\"" + _id + "\"" + "," + "\"" + _pw + "\"";
+            this.mID= this.mJoinPacket.JoinID;
+            this.mPW = this.mJoinPacket.JoinPW;
 
-            this.mServer.mDBAdapter.InsertTuple("joinUser", "id,passwd", _value);
-            return true;
+            try
+            {
+                if (this.mServer.mDBAdapter.InsertUserJoinTuple("joinUser", "id,passwd", this.mID, this.mPW))
+                    return true;
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool LoginToDB(byte[] buffer)
+        {
+            this.mJoinPacket = (JoinPacket)Packet.Deserialize(buffer);
+            this.mID = this.mJoinPacket.JoinID;
+            this.mPW = this.mJoinPacket.JoinPW;
+
+            try
+            {
+                if (this.mServer.mDBAdapter.CheckIDandPW(this.mID, this.mPW))
+                    return true;//일치 한게 있을 때
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

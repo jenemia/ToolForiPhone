@@ -15,12 +15,14 @@ namespace PacketNamespace
     public enum state
     {
         init = 0,
-        login,
+        setting,
         start,
         stop,
         play,
         exit,
-        join
+        join,
+        login,
+        error
     }
 
     [Serializable]
@@ -35,8 +37,10 @@ namespace PacketNamespace
         private int mAllPlayer;
         private int mRoom;
         private int mPosition;
+        private string mID;
 
         private int mState;
+        private int mResult;
 
         public Packet()
         {
@@ -100,10 +104,22 @@ namespace PacketNamespace
             get { return mRoom; }
         }
 
+        public string ID
+        {
+            set { mID = value;}
+            get { return mID; }
+        }
+
         public int State
         {
             set { mState = value; }
             get { return mState; }
+        }
+
+        public int Result
+        {
+            set { mResult = value;}
+            get { return mResult; }
         }
 
         public void AddTower( Tower to )
@@ -159,25 +175,25 @@ namespace PacketNamespace
     [Serializable]
     public class JoinPacket : Packet
     {
-        private string mID;
-        private string mPW;
+        private string mJoinID;
+        private string mJoinPW;
 
         public JoinPacket()
         {
-            this.mID = "";
-            this.mPW = "";
+            this.mJoinID = "";
+            this.mJoinPW = "";
         }
 
-        public string ID
+        public string JoinID
         {
-            set { mID = value; }
-            get { return mID; }
+            set { mJoinID = value; }
+            get { return mJoinID; }
         }
 
-        public string PW
+        public string JoinPW
         {
-            set { mPW = value; }
-            get { return mPW; }
+            set { mJoinPW = value; }
+            get { return mJoinPW; }
         }
     }
 }

@@ -194,17 +194,83 @@ namespace ChattingServer
          * attributes : "id,passwd"
          * values : "soohyun,1234"
          */
-        public bool InsertTuple( string table, string attributes, string values )
+        public bool InsertUserJoinTuple( string table, string attributes, string id, string pw )
         {
             string _sql = "insert into " + table + " (" + attributes + ") " +
-                "values (" + values + ");";
+                "values ('" + id + "', '" + pw + "');";
+
+            if (this.CheckID(id)) // id가 존재 안할 때
+                return false;
+
+            MySqlCommand _command;
+            _command = new MySqlCommand();
+            _command.Connection = this.mConn;
+            _command.CommandText = _sql;
+            try
+            {
+                _command.ExecuteNonQuery();
+            }
+            catch( MySqlException  e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            catch( InvalidOperationException )
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool CheckID( string id )
+        {
+            string _sql = "select no from joinUser where id = '" + id + "'";
 
             MySqlCommand _command;
             _command = new MySqlCommand();
             _command.Connection = this.mConn;
             _command.CommandText = _sql;
             MySqlDataReader _reader = _command.ExecuteReader();
-            return true;
+
+            _reader.Read();
+            try
+            {//id가 존재한다는 것
+                int _no = Convert.ToInt32(_reader["no"]);
+                _reader.Close();
+                return true;
+            }
+            catch( MySqlException e )
+            {
+                Console.WriteLine(e.Message);
+                _reader.Close();
+                return false;
+            }
+        }
+
+        public bool CheckIDandPW(string id, string pw)
+        {
+            string _sql = "select no from joinUser where id = '" + id + 
+                                              "' and passwd = '" + pw + "'";
+            
+            MySqlCommand _command;
+            _command = new MySqlCommand();
+            _command.Connection = this.mConn;
+            _command.CommandText = _sql;
+
+            try
+            {
+                MySqlDataReader _reader = _command.ExecuteReader();
+
+                _reader.Read();
+
+                //id, pw가 일치 한 것이 존재한다는 것
+                int _no = Convert.ToInt32(_reader["no"]);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
