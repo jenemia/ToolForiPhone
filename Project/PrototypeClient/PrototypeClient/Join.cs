@@ -31,10 +31,29 @@ namespace PrototypeClient
 
             JoinPacket _join = new JoinPacket();
             _join.State = (int)state.join;
-            _join.ID = _id;
-            _join.PW = _pw;
+            _join.JoinID = _id;
+            _join.JoinPW = _pw;
 
             this.mSingleton.ServerAdapter.Send(_join);
+
+            Packet _result;
+            while(true)
+            {
+                _result = (Packet)this.mSingleton.ServerAdapter.Receive();
+                if( (int)state.login == _result.State || (int)state.error == _result.State)
+                    break;
+            }
+
+            if( (int)state.error == _result.State )
+            {
+                MessageBox.Show("회원 가입 실패, 다시 입력하세요");
+            }
+            else
+            {
+                ActiveForm.Visible = false;
+                Client dlg = new Client();
+                dlg.ShowDialog();
+            }
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
@@ -42,7 +61,6 @@ namespace PrototypeClient
             ActiveForm.Visible = false;
             Client dlg = new Client();
             dlg.ShowDialog();
-            this.Visible = false;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

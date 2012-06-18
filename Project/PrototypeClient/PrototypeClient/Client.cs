@@ -103,7 +103,7 @@ namespace PrototypeClient
         //서버 접속 순서대로 플레이어 정함
         private void SetPlayer()
         {
-            this.mMyPacket.State = (int)state.login;
+            this.mMyPacket.State = (int)state.setting;
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
 
 
