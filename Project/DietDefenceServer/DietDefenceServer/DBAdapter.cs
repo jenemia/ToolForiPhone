@@ -257,18 +257,19 @@ namespace ChattingServer
             _command.Connection = this.mConn;
             _command.CommandText = _sql;
 
+            MySqlDataReader _reader = _command.ExecuteReader();
             try
             {
-                MySqlDataReader _reader = _command.ExecuteReader();
-
                 _reader.Read();
 
                 //id, pw가 일치 한 것이 존재한다는 것
                 int _no = Convert.ToInt32(_reader["no"]);
+                _reader.Close();
                 return true;
             }
             catch
             {
+                _reader.Close();
                 return false;
             }
         }

@@ -81,7 +81,7 @@ namespace PrototypeClient
 
             if ((int)state.error == _result.State)
             {
-                MessageBox.Show("로그인 다시 입력하세요");
+                MessageBox.Show("id,passwd 확인 또는 이미 로그인한 id가 존재");
             }
             else
             {

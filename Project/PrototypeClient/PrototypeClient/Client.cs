@@ -23,6 +23,7 @@ namespace PrototypeClient
         private int mPlayer;
         private int mRoom;
         private int mPosition;
+        private string mID;
         private bool mStart;
 
         private Packet mMyPacket;
@@ -63,6 +64,7 @@ namespace PrototypeClient
 
                 this.mRoom = 0;
                 this.mPlayer = 0;
+                this.mID = "";
                 //현재 Client가 몇 번째 Player인지 알아내기
                 SetPlayer();
                 //타워,적,유저 초기화
@@ -127,6 +129,7 @@ namespace PrototypeClient
             this.mPlayer = this.mYourPacket.Player;
             this.mPosition = this.mYourPacket.Position;
             this.mRoom = this.mYourPacket.Room;
+            this.mID = this.mYourPacket.ID;
             /* 
              * 리스트 초기화 하는 부분. 
             this.mLeftTower = this.mMyPacket.TowerList;
@@ -218,9 +221,8 @@ namespace PrototypeClient
         }
 
         /* 서버에게 패킷을 받아 오는 부분
-         * 받은 패킷의 player가 1player라면 왼쪽, 
-         * plyaer가 2라면 오른쪽으로 뿌려준다.
-         * 1번 client 2번 client 둘다 왼쪽은 1plyaer , 오른쪽은 2plyaer
+         * 받은 패킷에서 left, right를 받아온다.
+         * sate의 값에 따라 다른 처리를 한다.
          */
         private void StartReceive()
         {
@@ -232,7 +234,7 @@ namespace PrototypeClient
                     this.mYourPacket.InitPacket();
                     this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
 
-                    if ((int)state.stop == this.mYourPacket.State)
+                    if ((int)state.exit == this.mYourPacket.State) //상대방이 종료 될때 멈추기
                     {
                         this.mStart = false;
                         timer1.Stop();
@@ -241,8 +243,16 @@ namespace PrototypeClient
                         if (this.mThreadStart != null && this.mThreadStart.IsAlive)
                             this.mThreadStart.Abort();
                     }
-                        //이 부분 다시 보기
-                    else if ((int)state.start == this.mYourPacket.State)
+                    else if( (int)state.stop == this.mYourPacket.State) // 멈출때
+                    {
+                        this.mStart = false;
+                        timer1.Stop();
+                        if (this.mThreadReceive != null && this.mThreadReceive.IsAlive)
+                            this.mThreadReceive.Abort();
+                        if (this.mThreadStart != null && this.mThreadStart.IsAlive)
+                            this.mThreadStart.Abort();
+                    }
+                    else if ((int)state.start == this.mYourPacket.State) // 게임 시작
                     {
                         this.mStart = true;
                         MethodInvoker _tmr = new MethodInvoker(timer1.Start);
@@ -326,6 +336,7 @@ namespace PrototypeClient
             this.mMyPacket.Position = this.mPosition;
             this.mMyPacket.Room = this.mRoom;
             this.mMyPacket.State = (int)state.play;
+            this.mMyPacket.ID = this.mID;
 
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
                

@@ -30,6 +30,16 @@ namespace ChattingServer
         {
         }
 
+        /*
+         * Clinet가 보낸 Packet을 처리 하는 부분.
+         * Packetd에 포함된 State에 따라 처리 하는 Routine이 다르다.
+         * 1.join   : 회원가입 - 성공, 실패 패킷 보냄
+         * 2.lgoin  : 로그인 - 성공, 실패 패킷 보냄
+         * 3.setting: 처음 client가 접속했을 때 - list 초기화 data 및 player, room 보냄
+         * 4.start  : Clinet가 2명 접속해서 게임 시작을 알릴 때
+         * 5.exit   : Clinet종료를 알릴 때
+         * 6.play   : Game을 진행할 때
+         */ 
         public void Receive()
         {
             try
@@ -60,15 +70,21 @@ namespace ChattingServer
                     }
                     else if( (int)state.login == this.mPacket.State )
                     {//로그인 시도
-                        if (this.LoginToDB(_buffer)) //로그인 성공
-                        {//성공했을 때
-                            this.mPacket.State = (int)state.login;
+                        if (!this.LoginToDB(_buffer))
+                        {//로그인실패 했을 때
+                            this.mPacket.State = (int)state.error;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }
-                        else //실패
-                        {//로그인실패 했을 때
+                        else if( !this.mServer.CheckClinetsID(this.mID, this))
+                        {//이미 로그인한 id가 있을 때
                             this.mPacket.State = (int)state.error;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            Send(_buffer);
+                        }
+                        else 
+                        {//성공했을 때
+                            this.mPacket.State = (int)state.login;
                             _buffer = Packet.Serialize(this.mPacket);
                             Send(_buffer);
                         }
@@ -84,10 +100,11 @@ namespace ChattingServer
                         this.mPacket.TowerList = this.mServer.TowerList;
                         this.mPacket.User = this.mServer.UserList;
                         this.mPacket.StageList = this.mServer.StageList;
+                        this.mPacket.ID = this.mID;
 
                         this.mPlayer = this.mPacket.Player;
                         this.mRoom = this.mPacket.Room;
-
+                        
                         Server.mCnt++;
                         _buffer.Initialize();
                         _buffer = Packet.Serialize(this.mPacket);
@@ -107,10 +124,18 @@ namespace ChattingServer
                         this.mServer.Send(_buffer, 0, this.mRoom); // 모두에게 보내기
                         continue;
                     }
-                    else if( (int)state.exit == this.mPacket.State)
-                    {
+                    else if( (int)state.stop == this.mPacket.State ) //멈출 때
+                    {//게임끝날때, 
                         this.mPacket.InitPacket();
                         this.mPacket.State = (int)state.stop;
+                        _buffer.Initialize();
+                        _buffer = Packet.Serialize(this.mPacket);
+                        this.mServer.Send(_buffer, this.mPlayer, this.mRoom);
+                    }
+                    else if( (int)state.exit == this.mPacket.State) //종료할 때
+                    {
+                        this.mPacket.InitPacket();
+                        this.mPacket.State = (int)state.exit;
                         _buffer.Initialize();
                         _buffer = Packet.Serialize(this.mPacket);
                         this.mServer.Send(_buffer, this.mPlayer, this.mRoom);
@@ -119,11 +144,12 @@ namespace ChattingServer
                             this.mClient.Close();
                         if (0 != Server.mRoom[this.mRoom])
                             Server.mRoom[this.mRoom]--;
+
                         Console.WriteLine("{0}번방 {1}번 플레이어가 종료했습니다.", this.mRoom, this.mPlayer);
                         this.mServer.Remove(this.mPlayer);
                         break;
                     }
-                    else if( (int)state.play == this.mPacket.State)
+                    else if( (int)state.play == this.mPacket.State) //일반 게임 플레이 중
                     {
                         this.mServer.Send(_buffer, this.mPlayer, this.mRoom);              
                     }
@@ -149,7 +175,7 @@ namespace ChattingServer
             _ns.Close();
         }
 
-        public void SelectRoom()
+        public void SelectRoom() //접속한 클라이언트에게 방 배정
         {
             for (int i = 0; i < Server.mRoom.Length; i++ )
             {
@@ -177,7 +203,7 @@ namespace ChattingServer
          * attributes : " name,passwd "
          * values : " "soohyun" , "1234" "
          */
-        private bool JoinToDB( byte[] buffer )
+        private bool JoinToDB( byte[] buffer ) //회원가입
         {
             this.mJoinPacket = (JoinPacket)Packet.Deserialize(buffer);
             this.mID= this.mJoinPacket.JoinID;
@@ -196,7 +222,7 @@ namespace ChattingServer
             }
         }
 
-        private bool LoginToDB(byte[] buffer)
+        private bool LoginToDB(byte[] buffer) //로그인
         {
             this.mJoinPacket = (JoinPacket)Packet.Deserialize(buffer);
             this.mID = this.mJoinPacket.JoinID;

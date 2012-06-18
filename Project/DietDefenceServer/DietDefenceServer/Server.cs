@@ -71,6 +71,11 @@ namespace ChattingServer
         }
         ~Server()
         {
+            foreach (Thread _temp in this.mHashThreadForClient)
+            {
+                if (_temp != null && _temp.IsAlive)
+                    _temp.Abort();
+            }
             this.mServer.Stop(); //서버 멈추기
         }
 
@@ -160,6 +165,18 @@ namespace ChattingServer
                     }
                 }
             }
+        }
+
+        public bool CheckClinetsID( string id, Client my )
+        {
+            foreach ( Client _client in this.mArrayClient )
+            {
+                if (my == _client)
+                    continue;
+                if (id.Equals(_client.mID))
+                    return false;
+            }
+            return true;
         }
     }
 }
