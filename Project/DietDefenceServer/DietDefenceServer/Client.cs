@@ -12,6 +12,7 @@ namespace ChattingServer
         public Socket mClient;
         private Packet mPacket;
         private JoinPacket mJoinPacket;
+        private resultPacket mResultPacket;
 
         public int mPlayer;
         public int mRoom;
@@ -89,6 +90,21 @@ namespace ChattingServer
                             Send(_buffer);
                         }
                      }
+                    else if( (int)accountState.result == this.mPacket.State) //게임 종료 후 승패 기록을 위하여
+                    {
+                        if( this.recordWinAndLoseToDB(_buffer) ) //성공
+                        {
+                            this.mPacket.State = (int)accountState.result;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            this.mServer.Send(_buffer, this.mPlayer, this.mRoom);
+                        }
+                        else // 실패 
+                        {
+                            this.mPacket.State = (int)accountState.error;
+                            _buffer = Packet.Serialize(this.mPacket);
+                            this.mServer.Send(_buffer, this.mPlayer, this.mRoom);
+                        }
+                    }
                     else if ( (int)state.setting == this.mPacket.State) //Client가 처음 실행 되었을 때
                     {
                         this.mPacket.Player = Server.mCnt;
@@ -125,7 +141,7 @@ namespace ChattingServer
                         continue;
                     }
                     else if( (int)state.stop == this.mPacket.State ) //멈출 때
-                    {//게임끝날때, 
+                    {
                         this.mPacket.InitPacket();
                         this.mPacket.State = (int)state.stop;
                         _buffer.Initialize();
@@ -232,6 +248,25 @@ namespace ChattingServer
             {
                 if (this.mServer.mDBAdapter.CheckIDandPW(this.mID, this.mPW))
                     return true;//일치 한게 있을 때
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool recordWinAndLoseToDB(byte[] buffer) //승패 판정 기록
+        {
+            this.mResultPacket = (resultPacket)Packet.Deserialize(buffer);
+            string winID = this.mResultPacket.WinPlayerID;
+            string loseID = this.mResultPacket.LosePlayerID;
+
+            try
+            {
+                if (this.mServer.mDBAdapter.recordWinAndLose(winID, loseID))
+                    return true; //성공
                 else
                     return false;
             }

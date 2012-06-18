@@ -12,7 +12,14 @@ namespace ChattingServer
         public DBAdapter()
         {
             this.ConnectDatabase();
-            mConn.Open();
+            try
+            {
+                mConn.Open();
+            }
+            catch
+            {
+                mConn.Open();
+            }
         }
 
         ~DBAdapter()
@@ -27,7 +34,7 @@ namespace ChattingServer
                 string _str = String.Format(@"server=myungjun.org;user=jenemia;password=soohyun;database=jenemia");
                 this.mConn = new MySqlConnection(_str);
             }
-            catch( Exception )
+            catch (Exception)
             {
                 this.ConnectDatabase();
             }
@@ -194,7 +201,7 @@ namespace ChattingServer
          * attributes : "id,passwd"
          * values : "soohyun,1234"
          */
-        public bool InsertUserJoinTuple( string table, string attributes, string id, string pw )
+        public bool InsertUserJoinTuple(string table, string attributes, string id, string pw)
         {
             string _sql = "insert into " + table + " (" + attributes + ") " +
                 "values ('" + id + "', '" + pw + "');";
@@ -210,19 +217,19 @@ namespace ChattingServer
             {
                 _command.ExecuteNonQuery();
             }
-            catch( MySqlException  e)
+            catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
                 return false;
             }
-            catch( InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return false;
             }
             return true;
         }
 
-        public bool CheckID( string id )
+        public bool CheckID(string id)
         {
             string _sql = "select no from joinUser where id = '" + id + "'";
 
@@ -239,7 +246,7 @@ namespace ChattingServer
                 _reader.Close();
                 return true;
             }
-            catch( MySqlException e )
+            catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
                 _reader.Close();
@@ -249,9 +256,9 @@ namespace ChattingServer
 
         public bool CheckIDandPW(string id, string pw)
         {
-            string _sql = "select no from joinUser where id = '" + id + 
+            string _sql = "select no from joinUser where id = '" + id +
                                               "' and passwd = '" + pw + "'";
-            
+
             MySqlCommand _command;
             _command = new MySqlCommand();
             _command.Connection = this.mConn;
@@ -270,6 +277,32 @@ namespace ChattingServer
             catch
             {
                 _reader.Close();
+                return false;
+            }
+        }
+
+        public bool recordWinAndLose(string winID, string loseID)
+        {
+            string _winSql = "update joinUser set win = win+1 where id = '"
+                                + winID + "';";
+            string _loseSql = "update joinUser set lose = lose+1 where id = '"
+                                + loseID + "';";
+
+            MySqlCommand _command;
+            _command = new MySqlCommand();
+            _command.Connection = this.mConn;
+
+            try
+            {
+                _command.CommandText = _winSql;
+                _command.ExecuteNonQuery();
+
+                _command.CommandText = _loseSql;
+                _command.ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
                 return false;
             }
         }
