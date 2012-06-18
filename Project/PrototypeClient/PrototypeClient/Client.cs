@@ -53,12 +53,6 @@ namespace PrototypeClient
             }
             else
             {
-                this.mLeftTower = new ArrayList();
-                this.mRightTower = new ArrayList();
-                this.mLeftEnemy = new ArrayList();
-                this.mRightEnemy = new ArrayList();
-                this.mUser = new ArrayList();
-
                 this.mMyPacket = new Packet();
                 this.mYourPacket = new Packet();
 
@@ -97,7 +91,6 @@ namespace PrototypeClient
             this.mMyPacket.Room = this.mRoom;
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
             this.mSingleton.ServerAdapter.ExitServer();
-            //Environment.Exit(0);
          }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
@@ -148,6 +141,12 @@ namespace PrototypeClient
         //위에서 리스트 초기화 하면 이 부분은 필요 없음
         private void SetObjects()
         {
+            this.mLeftTower = new ArrayList();
+            this.mRightTower = new ArrayList();
+            this.mLeftEnemy = new ArrayList();
+            this.mRightEnemy = new ArrayList();
+            this.mUser = new ArrayList();
+
             Tower _tower = new Tower(1, 40, 200);
             this.mLeftTower.Add(_tower);
             Enemy _enemy = new Enemy(1, 100, 200);
@@ -241,10 +240,12 @@ namespace PrototypeClient
                     
                     if ((int)state.exit == this.mYourPacket.State || (int)state.stop == this.mYourPacket.State) //상대방이 종료 될때 멈추기
                     {//상대방이 나갔을 때 또는 게임이 끝나서 멈출때
+                        this.mPosition = this.mYourPacket.Position;
+                        
                         this.mStart = false;
                         timer1.Stop();
                         this.SetObjects();
-                        Invalidate(); 
+                        Invalidate();
                         this.mThreadStart = new Thread(new ThreadStart(StartWait));
                         this.mThreadStart.Start();
                         //break;

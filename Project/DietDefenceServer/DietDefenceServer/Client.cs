@@ -144,6 +144,7 @@ namespace ChattingServer
                     {
                         this.mPacket.InitPacket();
                         this.mPacket.State = (int)state.stop;
+                        this.mPacket.Position = (int)position.left;                        
                         _buffer.Initialize();
                         _buffer = Packet.Serialize(this.mPacket);
                         this.mServer.Send(_buffer, this.mPlayer, this.mRoom);
@@ -152,6 +153,7 @@ namespace ChattingServer
                     {
                         this.mPacket.InitPacket();
                         this.mPacket.State = (int)state.exit;
+                        this.mPacket.Position = (int)position.left; 
                         _buffer.Initialize();
                         _buffer = Packet.Serialize(this.mPacket);
                         this.mServer.Send(_buffer, this.mPlayer, this.mRoom);
