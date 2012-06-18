@@ -15,7 +15,7 @@ namespace PrototypeClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Join());
+            Application.Run(new Client());
         }
     }
 }

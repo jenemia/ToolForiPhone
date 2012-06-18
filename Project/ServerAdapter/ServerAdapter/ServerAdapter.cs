@@ -79,6 +79,10 @@ namespace ServerAdapterNamespace
 
                 while (true)
                 {
+                    if (this.mConnected == false)
+                        break;
+                    Thread.Sleep(30);
+
                     try
                     {
                         _ns.Read(_buffer, 0, _buffer.Length);
@@ -144,6 +148,11 @@ namespace ServerAdapterNamespace
             {
 
             }
+        }
+
+        public void ExitServer()
+        {
+            this.mConnected = false;
         }
     }
 }

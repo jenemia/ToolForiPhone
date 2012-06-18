@@ -29,7 +29,7 @@ namespace PrototypeClient
         private Packet mMyPacket;
         private Packet mYourPacket;
 
-        private Thread mThreadReceive;
+        //private Thread mThreadReceive;
         private Thread mThreadStart;
 
         Singleton mSingleton;
@@ -73,7 +73,7 @@ namespace PrototypeClient
                 this.mStart = false;
                 timer1.Interval = FrameTime;
 
-                this.mThreadReceive = new Thread(new ThreadStart(StartReceive));
+                //this.mThreadReceive = new Thread(new ThreadStart(StartReceive));
 
                 //1,2Player가 모두 접속 후에 시작하기 위해 기다리는 메소드
                 this.mThreadStart = new Thread(new ThreadStart(StartWait));
@@ -84,9 +84,9 @@ namespace PrototypeClient
         private void Client_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.mStart = false;
-            //timer1.Stop();
-            if (this.mThreadReceive != null && mThreadReceive.IsAlive)
-                this.mThreadReceive.Abort();
+            timer1.Stop();
+            //if (this.mThreadReceive != null && mThreadReceive.IsAlive)
+            //    this.mThreadReceive.Abort();
             if (this.mThreadStart != null && this.mThreadStart.IsAlive)
                 this.mThreadStart.Abort();
 
@@ -96,7 +96,9 @@ namespace PrototypeClient
             this.mMyPacket.Player = this.mPlayer;
             this.mMyPacket.Room = this.mRoom;
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
-        }
+            this.mSingleton.ServerAdapter.ExitServer();
+            //Environment.Exit(0);
+         }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -129,14 +131,15 @@ namespace PrototypeClient
             this.mPosition = this.mYourPacket.Position;
             this.mRoom = this.mYourPacket.Room;
             this.mID = this.mYourPacket.ID;
-            /* 
-             * 리스트 초기화 하는 부분. 
+            
+            //리스트 초기화 하는 부분. 
+            /*
             this.mLeftTower = this.mMyPacket.TowerList;
             this.mRightTower = this.mMyPacket.TowerList;
             this.mLeftEnemy = this.mMyPacket.EnemyList;
             this.mRightEnemy = this.mMyPacket.EnemyList;
             this.mUser = this.mMyPacket.User;
-            */
+             * */
 
             this.mMyPacket.InitPacket();
         }
@@ -166,7 +169,10 @@ namespace PrototypeClient
             Graphics _g = e.Graphics;
 
             if (this.mStart == true)
+            {
                 this.StarteSend();
+                this.StartReceive();
+            }
 
             SolidBrush _brush = new SolidBrush(Color.Blue);
             foreach (Tower _to in this.mLeftTower)
@@ -225,42 +231,36 @@ namespace PrototypeClient
          */
         private void StartReceive()
         {
-            while (true)
+            //while (true)
             {
-                Thread.Sleep(FrameTime);
+               // Thread.Sleep(FrameTime);
                 try
                 {
                     this.mYourPacket.InitPacket();
                     this.mYourPacket = this.mSingleton.ServerAdapter.Receive();
-
-                    if ((int)state.exit == this.mYourPacket.State) //상대방이 종료 될때 멈추기
-                    {
+                    
+                    if ((int)state.exit == this.mYourPacket.State || (int)state.stop == this.mYourPacket.State) //상대방이 종료 될때 멈추기
+                    {//상대방이 나갔을 때 또는 게임이 끝나서 멈출때
                         this.mStart = false;
                         timer1.Stop();
-                        if (this.mThreadReceive != null && this.mThreadReceive.IsAlive)
-                            this.mThreadReceive.Abort();
-                        if (this.mThreadStart != null && this.mThreadStart.IsAlive)
-                            this.mThreadStart.Abort();
-                    }
-                    else if( (int)state.stop == this.mYourPacket.State) // 멈출때
-                    {
-                        this.mStart = false;
-                        timer1.Stop();
-                        if (this.mThreadReceive != null && this.mThreadReceive.IsAlive)
-                            this.mThreadReceive.Abort();
-                        if (this.mThreadStart != null && this.mThreadStart.IsAlive)
-                            this.mThreadStart.Abort();
+                        this.SetObjects();
+                        Invalidate(); 
+                        this.mThreadStart = new Thread(new ThreadStart(StartWait));
+                        this.mThreadStart.Start();
+                        //break;
                     }
                     else if ((int)state.start == this.mYourPacket.State) // 게임 시작
                     {
                         this.mStart = true;
                         MethodInvoker _tmr = new MethodInvoker(timer1.Start);
                         this.Invoke(_tmr);
-                        if (this.mThreadReceive != null && (this.mThreadReceive.IsAlive == false))
-                            this.mThreadReceive.Start();
+                        //if (this.mThreadReceive != null && (this.mThreadReceive.IsAlive == false))
+                        //    this.mThreadReceive.Start();
                     }
                     else if ((int)state.play == this.mYourPacket.State)
                     {
+                        if (0 == this.mYourPacket.Player)
+                            return;
                         if (this.mYourPacket.Position == (int)position.left) // 받아온 패킷을 보낸 player가 1p일 때
                         {
                             for (int i = 0; i < this.mYourPacket.TowerList.Count; i++)
@@ -373,7 +373,9 @@ namespace PrototypeClient
             this.mMyPacket.InitPacket();
 
             //쓰레드 생성하고 시작
-            mThreadReceive.Start();
+            //if( !this.mThreadReceive.IsAlive)
+                //this.mThreadReceive = new Thread(new ThreadStart(StartReceive));
+            //mThreadReceive.Start();
             this.mStart = true;
             
             //timer는 thread.Start와 다르게 주 Thread에서 관리되는 Control이기 때문에
@@ -382,9 +384,7 @@ namespace PrototypeClient
             this.Invoke(_tmr);
         }
 
-        /*client가 게임 시작을 하고 싶을때 누르는 버튼 이벤트
-         * 향후 현재 게임에 client가 몇명 접속했는지 보여져야 한다.
-         * 현재는 2명 뿐이니 1/2 정도로 표시해도 될듯.
+        /*client가 게임 시작을 하고 싶을때 누르는 버튼 이벤트.
          */
         private void button1_Click(object sender, EventArgs e)
         {
