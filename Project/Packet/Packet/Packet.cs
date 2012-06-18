@@ -8,7 +8,7 @@ namespace PacketNamespace
 {
     public enum position
     {
-        left = 0,
+        left = 20,
         right
     }
 
@@ -25,7 +25,7 @@ namespace PacketNamespace
 
     public enum accountState
     {
-        init = 0,
+        init = 10,
         join,
         login,
         result,

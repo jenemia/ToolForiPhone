@@ -21,6 +21,8 @@ namespace PacketNamespace
         private int mIncreaseDamage;
         private int mIncreaseMax;
         private int mIncreasePrice;
+        private double mMissileX;
+        private double mMissileY;
 
         public Tower(int type = 0, double x = 0, double y = 0)
         {
@@ -37,6 +39,8 @@ namespace PacketNamespace
             this.mIncreaseDamage = 0;
             this.mIncreaseMax = 0;
             this.mIncreasePrice = 0;
+            this.mMissileX = 0;
+            this.mMissileY = 0;
         }
 
         public double X
@@ -115,6 +119,18 @@ namespace PacketNamespace
         {
             set { mIncreasePrice = value;}
             get { return mIncreasePrice;}
+        }
+
+        public double MissileX
+        {
+            set { mMissileX = value;}
+            get { return mMissileX; }
+        }
+
+        public double MissileY
+        {
+            set { mMissileY = value;}
+            get { return mMissileY; }
         }
     }
 }

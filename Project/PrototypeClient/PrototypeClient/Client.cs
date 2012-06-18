@@ -396,5 +396,21 @@ namespace PrototypeClient
             this.mSingleton.ServerAdapter.Send(this.mMyPacket);
             this.mMyPacket.InitPacket();
         }
+
+        private void button2_Click(object sender, EventArgs e)//Win
+        {
+            resultPacket _result = new resultPacket();
+            _result.Player = this.mPlayer;
+            _result.Position = this.mPosition;
+            _result.Room = this.mRoom;
+            _result.State = (int)accountState.result;
+            _result.ID = this.mID;
+            _result.WinPlayerID = "jenemia";
+            _result.LosePlayerID = "isu";
+
+            this.mSingleton.ServerAdapter.Send(_result);
+
+            this.mMyPacket.InitPacket();
+        }
     }
 }
