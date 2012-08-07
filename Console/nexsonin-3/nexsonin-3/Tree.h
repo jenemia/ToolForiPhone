@@ -5,6 +5,7 @@
 #include <list>
 #include <map>
 #include <queue>
+#include <stack>
 
 #include "HighG.h"
 #include "Node.h"
@@ -32,6 +33,7 @@ private :
 
 	void Insert(int id); //주유소 id를 통해 객체 넣기
 	void ApproachNodeInsert( int distance, CNode* preNode, int nowID );
+	void BlockMatrix( int row, int col );
 public:
 	
 	CTree(void);
@@ -39,5 +41,6 @@ public:
 	void InitWithTxt(); //텍스트 파일을 읽어 주유소 및 길 설정
 	void DisplayMatrix(); //InitWithTxt()를 통해 얻어온 정보로 인접 행렬 생성
 	void Start();
+	void Result();
 };
 

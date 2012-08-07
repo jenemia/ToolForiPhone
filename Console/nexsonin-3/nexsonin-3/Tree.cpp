@@ -49,15 +49,15 @@ void CTree::InitWithTxt()
 	//각 지점간의 길과 가중치(길이)를 관리하기 위하여 인접행렬 만들기
 	fin >> this->mLineCount; //길 개수
 	
-	this->mAdjacencyMatrix = new int*[this->mLineCount];
-	for( int i=0; i<this->mLineCount; i++)
+	this->mAdjacencyMatrix = new int*[this->mGasCount];
+	for( int i=0; i<this->mGasCount; i++)
 	{
-		this->mAdjacencyMatrix[i] = new int[this->mLineCount];
+		this->mAdjacencyMatrix[i] = new int[this->mGasCount];
 	}
 
-	for( int i=0; i<this->mLineCount; i++ )
+	for( int i=0; i<this->mGasCount; i++ )
 	{
-		for( int j=0; j<this->mLineCount; j++ )
+		for( int j=0; j<this->mGasCount; j++ )
 		{
 			this->mAdjacencyMatrix[i][j] = -1; //자기 자신이거나 , 갈수 없는 길에는 -1로
 		}
@@ -79,9 +79,9 @@ void CTree::InitWithTxt()
 
 void CTree::DisplayMatrix()
 {
-	for( int i=0; i<this->mLineCount; i++ )
+	for( int i=0; i<this->mGasCount; i++ )
 	{
-		for( int j=0; j<this->mLineCount; j++ )
+		for( int j=0; j<this->mGasCount; j++ )
 		{
 			cout  << setw(5) << this->mAdjacencyMatrix[i][j];
 		}
@@ -171,13 +171,13 @@ void CTree::ApproachNodeInsert(int distance, CNode* preNode, int nowID)
 	if( preNode->mOil - distance >= 0 ) //주유소로 가는 길에 기름이 남았거나 딱 맞을 때
 	{
 		apTemp->mTotalPrice = preNode->mTotalPrice; //기름이 남았기 때문에 기름값 안들음
-		apTemp->mSpendOil = 0;
+		preNode->mSpendOil = 0;
 		apTemp->mOil = preNode->mOil - distance; //이전 주유소에서 지금 주유소 거리만큼 사용했으니
 	}
 	else //기름값이 들었을 때
 	{
-		apTemp->mSpendOil =  -(preNode->mOil-distance); //주유소에서 기름 채운 양
-		apTemp->mTotalPrice = preNode->mTotalPrice + apTemp->mSpendOil * preNode->mPrice; //모자란 기름 * 이전 주유소 기름값
+		preNode->mSpendOil =  -(preNode->mOil-distance); //주유소에서 기름 채운 양, 이전 주유소에서 기름을 채워 놓고 와야 하기 때문에
+		apTemp->mTotalPrice = preNode->mTotalPrice + preNode->mSpendOil * preNode->mPrice; //모자란 기름 * 이전 주유소 기름값
 		apTemp->mOil = 0; //이전 주유소에서 지금 주유소만큼의 기름만 가지고 있었으니 현재는 0
 	}
 	apTemp->mDepth = preNode->mDepth+1; //이전 주유소 깊이 보다 +1
@@ -194,6 +194,11 @@ void CTree::ApproachNodeInsert(int distance, CNode* preNode, int nowID)
 		if( (*this->mIterNode)->mTotalPrice > apTemp->mTotalPrice ) //거쳐갔던 노드 가중치가 더 크면 바꾼다.
 		{
 			CNode* removeNode = *this->mIterNode;
+
+			//인접행렬에서 못가게 바꾸기
+			int row = removeNode->mID, col = removeNode->mPreNode->mID;
+			BlockMatrix(row,col);
+
 			removeNode->mPreNode->mListApproachNode.remove(removeNode); //이전 노드의 인접노드들 중에서 해당 노드 삭제
 
 			delete removeNode;
@@ -201,7 +206,7 @@ void CTree::ApproachNodeInsert(int distance, CNode* preNode, int nowID)
 
 			this->mListPassNode.remove( *this->mIterNode );
 
-			//삭제한 node의 id를 삭제하기 위하여 다시 큐를 만들어....
+			//삭제한 node의 id를 PassNode에서 삭제하기 위하여 다시 큐를 만들어....
 			queue<int> temp;
 			while( !this->mQueueWorkLoad.empty() )
 			{
@@ -247,3 +252,69 @@ void CTree::ApproachNodeInsert(int distance, CNode* preNode, int nowID)
 	//this->mListPassNode[apTemp->mID] = apTemp; 
 }
 
+void CTree::BlockMatrix(int row, int col)
+{
+	if( this->mAdjacencyMatrix[row][col] != -1)
+		this->mAdjacencyMatrix[row][col] = -1;
+	else if( this->mAdjacencyMatrix[col][row] != -1 )
+		this->mAdjacencyMatrix[col][row] = -1;
+}
+
+void CTree::Result()
+{
+	bool des = false;
+	int col = 0;
+	int row = this->mEnd;
+
+	stack<int> node;
+	stack<int> oil;
+
+	while( !des )
+	{
+		for( int i=0; i<mGasCount; i++ )
+		{
+			if( -1 != this->mAdjacencyMatrix[row][i] )
+			{
+				col = i;
+				node.push( row );
+
+				for( this->mIterNode=this->mListPassNode.begin(); mIterNode!=this->mListPassNode.end(); this->mIterNode++)
+				{
+					if( (*this->mIterNode)->mID == row )
+					{
+						oil.push( (*this->mIterNode)->mSpendOil );
+						break;
+					}
+				}
+				break;
+			}
+		}
+		if( col == this->mBegin )
+			des = true;
+		else
+			row = col;
+	}
+
+	int total = 0;
+	for( this->mIterNode=this->mListPassNode.begin(); mIterNode!=this->mListPassNode.end(); this->mIterNode++)
+	{
+		if( (*this->mIterNode)->mID == this->mEnd )
+		{
+			total = (*this->mIterNode)->mTotalPrice;
+			break;
+		}
+	}
+
+	ofstream fout;
+	fout.open("ouput.txt");
+	fout << total << endl;
+	fout << this->mBegin << " " << 0 << endl;
+	//스택으로 쌓아서 거꾸로 출력.
+	while( !node.empty() )
+	{
+		fout << node.top() << " " << oil.top() << endl;
+		node.pop();
+		oil.pop();
+	}
+	fout.close();
+}
