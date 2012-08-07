@@ -1,8 +1,11 @@
 #pragma once
 #include <list>
 #include <iostream>
+#include "HighG.h"
 
 using namespace std;
+
+extern list<int> mExtraApproachNode;
 
 class CNode
 {

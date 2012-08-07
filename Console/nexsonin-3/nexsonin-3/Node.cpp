@@ -16,4 +16,16 @@ CNode::CNode(void)
 
 CNode::~CNode(void)
 {
+	list<CNode*>::iterator iter;
+	if( !this->mListApproachNode.empty() )
+	{
+		for( iter = this->mListApproachNode.begin(); iter != this->mListApproachNode.end(); iter++ )
+		{		
+			int num = (*iter)->mID;
+			mExtraApproachNode.push_back(num);
+			(*iter)->mPreNode = NULL;
+		}
+		this->mListApproachNode.clear();
+
+	}
 }

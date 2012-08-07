@@ -6,10 +6,11 @@
 #include <map>
 #include <queue>
 
+#include "HighG.h"
 #include "Node.h"
 
 using namespace std;
-
+extern list<int> mExtraApproachNode;
 class CTree
 {
 private :
@@ -23,13 +24,16 @@ private :
 	CNode* mHeadNode; //시작 노드
 	CNode* mCurrentNode;
 	list<int> mListMinimumLoad; //최선의 길 저장
-	queue<int> mQueueWorkedLoad; //노드를 입력된 순서대로 처리
-	map<int, CNode*> mMapPassNode;
+	queue<int> mQueueWorkLoad; //노드를 입력된 순서대로 처리
+	list<CNode*> mListPassNode; //한번 지나간 노드를 저장하여 나중에 바로 사용하기.
+	list<CNode*>::iterator mIterNode;
 	int mCurrentDepth;
 
-	void Insert(int id); //주유소 id를 통해 객체 넣기
 
+	void Insert(int id); //주유소 id를 통해 객체 넣기
+	void ApproachNodeInsert( int distance, CNode* preNode, int nowID );
 public:
+	
 	CTree(void);
 	~CTree(void);
 	void InitWithTxt(); //텍스트 파일을 읽어 주유소 및 길 설정
