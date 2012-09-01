@@ -22,31 +22,42 @@ namespace ToolForiPhone
             None
         }
 
+        //save
         Point mPointMouse;
         Image mImage;
         Form1 mForm;
         PropertyGridCustom mPropertyGrid;
-        Direction mDirection = Direction.None;
-        int mTag;
 
+        //계산등에 필요한 변수들
+        Direction mDirection = Direction.None;
+        public int[] mCoordinateInImage = new int[2]; //UIViewController의 Image 어디에 붙어 있는지 추적하기 위해
         bool isBorder = false;
         bool isMouseLeft = false;
-
+        public int mIncrease;
         const int DRAG_HANDLE_SIZE = 7;
 
-        public PictureComponents(ImageList list, int index, string name, int tag, Form1 form)
+        //밖에서 쓸 변수들
+        public String mName;
+        public int mTag; //이미지 tag
+        public int mIndexNumber; //list index
+        public int mControllerNumber; // ViewController number
+
+        public PictureComponents(ImageList list, int index, string name, int cnt, int tag, Form1 form)
         {
             Image temp = list.Images[index];
-
             ResourceManager manager = Properties.Resources.ResourceManager;
             this.Image = (Bitmap)manager.GetObject(name);
 
             this.mImage = this.Image;
             this.Size = this.ChoiceImageSize(name);
+            this.mName = name;
+            this.mIndexNumber = cnt;
             this.mTag = tag;
             this.mForm = form;
+            this.mControllerNumber = -1;
             this.SizeMode = PictureBoxSizeMode.StretchImage;
-            this.Location = new Point(50, 50);
+            this.Location = new Point(1, 30);
+            this.mIncrease = 0;
 
             //pictureBox의 propertyGrid를 Custom하여 보여준다.
             this.mPropertyGrid = new PropertyGridCustom();
@@ -117,9 +128,8 @@ namespace ToolForiPhone
 
             if (e.Button == MouseButtons.Left)
             {
-                Form1.mSelectedTag = (int)this.mTag;
                 this.mPointMouse = e.Location;
-                this.mForm.PictureBoxMouseDown();
+                this.mForm.PictureBoxMouseDown(this.mIndexNumber);
 
                 this.isBorder = true;
                 this.isMouseLeft = true;
@@ -131,12 +141,12 @@ namespace ToolForiPhone
             base.OnMouseUp(e);
             this.mPointMouse = Point.Empty;
 
-            Form1.mSelectedTag = (int)this.mTag;
             //이동된 좌표값으로 수정.                        
             this.mPropertyGrid.Replace("x", this.Location.X);
             this.mPropertyGrid.Replace("y", this.Location.Y);
             this.DrawControlBorder();
             this.isMouseLeft = false;
+            this.mForm.PictureBoxMouseUp();
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -147,27 +157,27 @@ namespace ToolForiPhone
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-
-            if ( this.isBorder ) //테두리가 있을 때
+            
+            if (this.isBorder) //테두리가 있을 때
             {
                 //클릭 지점부터 이동하는 좌표를 계산.
                 Point pos = new Point(e.Location.X - this.mPointMouse.X, e.Location.Y - this.mPointMouse.Y);
                 Point newLocation = this.Location;
                 Size newSize = this.Size;
-                if (this.isMouseLeft && this.mPointMouse != Point.Empty ) //왼쪽 마우스 누르고 있는 상태일 때
+                if (this.isMouseLeft && this.mPointMouse != Point.Empty) //왼쪽 마우스 누르고 있는 상태일 때
                 {
                     #region resize the control in 8 directions
                     if (mDirection == Direction.NW)
                     {
                         //north west, location and width, height change
                         newLocation = new Point(this.Location.X + pos.X, this.Location.Y + pos.Y);
-                        newSize = new Size(this.Size.Width - pos.X, this.Size.Height - pos.Y );
+                        newSize = new Size(this.Size.Width - pos.X, this.Size.Height - pos.Y);
 
                         this.Location = newLocation;
                         this.Size = newSize;
-                        Console.WriteLine("location : " + e.Location); 
+                        Console.WriteLine("location : " + e.Location);
 
-                        Console.WriteLine("point : " + this.mPointMouse);                        
+                        Console.WriteLine("point : " + this.mPointMouse);
                     }
                     else if (mDirection == Direction.N)
                     {
@@ -187,7 +197,7 @@ namespace ToolForiPhone
                         this.Location = newLocation;
                         this.Size = newSize;
                         //pictureBox크기가 변함에 따라 mPointMouse(클릭 지점)도 변해야 한다.
-                        this.mPointMouse = new Point( this.mPointMouse.X + pos.X , this.mPointMouse.Y);
+                        this.mPointMouse = new Point(this.mPointMouse.X + pos.X, this.mPointMouse.Y);
 
                         Console.WriteLine("location : " + e.Location);
                         Console.WriteLine("point : " + this.mPointMouse);
@@ -196,7 +206,7 @@ namespace ToolForiPhone
                     {
                         //west, location and width will change
                         newLocation = new Point(this.Location.X + pos.X, this.Location.Y);
-                        newSize = new Size(this.Size.Width - pos.X , this.Size.Height);
+                        newSize = new Size(this.Size.Width - pos.X, this.Size.Height);
 
                         this.Location = newLocation;
                         this.Size = newSize;
@@ -373,6 +383,9 @@ namespace ToolForiPhone
         //pictureBox를 클릭하면 주위에 크기를 변경할 수 있는 모서리들이 생긴다.
         public void DrawControlBorder()
         {
+            //UIViewController는 크기 변화 안됨.
+            if (this.mName.Equals("UIViewController"))
+                return;
             //define the border to be drawn, it will be offset by DRAG_HANDLE_SIZE / 2
             //around the this, so when the drag handles are drawn they will seem to be
             //connected in the middle.

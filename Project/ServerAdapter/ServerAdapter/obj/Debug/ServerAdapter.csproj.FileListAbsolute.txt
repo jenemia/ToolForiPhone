@@ -1,7 +1,0 @@
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Debug\ServerAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Debug\ServerAdapter.pdb
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Debug\DBAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Debug\Packet.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\obj\Debug\ServerAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\obj\Debug\ServerAdapter.pdb

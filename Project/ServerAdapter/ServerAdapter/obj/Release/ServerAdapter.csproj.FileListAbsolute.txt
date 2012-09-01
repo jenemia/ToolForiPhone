@@ -1,7 +1,0 @@
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Release\ServerAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Release\ServerAdapter.pdb
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Release\DBAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\bin\Release\Packet.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\obj\Release\ResolveAssemblyReference.cache
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\obj\Release\ServerAdapter.dll
-C:\Users\Administrator\Documents\develop\Project\ServerAdapter\ServerAdapter\obj\Release\ServerAdapter.pdb

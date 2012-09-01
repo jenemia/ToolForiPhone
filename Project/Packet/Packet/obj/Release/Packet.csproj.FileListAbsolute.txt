@@ -1,5 +1,0 @@
-C:\Users\Administrator\Documents\develop\Project\Packet\Packet\bin\Release\Packet.dll
-C:\Users\Administrator\Documents\develop\Project\Packet\Packet\bin\Release\Packet.pdb
-C:\Users\Administrator\Documents\develop\Project\Packet\Packet\obj\Release\ResolveAssemblyReference.cache
-C:\Users\Administrator\Documents\develop\Project\Packet\Packet\obj\Release\Packet.dll
-C:\Users\Administrator\Documents\develop\Project\Packet\Packet\obj\Release\Packet.pdb

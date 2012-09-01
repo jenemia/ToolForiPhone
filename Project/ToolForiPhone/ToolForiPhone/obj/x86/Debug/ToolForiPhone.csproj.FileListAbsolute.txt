@@ -18,3 +18,13 @@ C:\Users\Administrator\Documents\develop\Project\ToolForiPhone\ToolForiPhone\obj
 C:\Users\Administrator\Documents\develop\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Administrator\Documents\develop\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ToolForiPhone.exe
 C:\Users\Administrator\Documents\develop\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ToolForiPhone.pdb
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ToolForiPhone.exe
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ToolForiPhone.pdb
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\bin\Debug\ToolForiPhone.exe
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\bin\Debug\ToolForiPhone.pdb
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\bin\Debug\ConsoleLib.dll
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ToolForiPhone.Form1.resources
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\ToolForiPhone.Properties.Resources.resources
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Administrator\Documents\develope\Project\ToolForiPhone\ToolForiPhone\obj\x86\Debug\GenerateResource.write.1.tlog
