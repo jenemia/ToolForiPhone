@@ -13,7 +13,8 @@ namespace ToolForiPhone
         int mIndexNumber; //PictureBox Couonting 
         int mSelectedNumber;
         public int mWheelCnt;
-        PictureComponents mSelectedControl; 
+        PictureComponents mSelectedControl;
+        XMLAdapter mXMLAdapter;
 
         public Form1()
         {
@@ -22,6 +23,7 @@ namespace ToolForiPhone
             this.mIndexNumber = 0;
             this.mSelectedNumber = 0;
             this.mSelectedControl = null;
+            this.mXMLAdapter = new XMLAdapter();
 
             this.mWheelCnt = 0;
             panel1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseWheel);
@@ -199,17 +201,7 @@ namespace ToolForiPhone
         #region Menu
         private void xML로저장SToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*
-            foreach( PictureComponents picture in this.mListObjects )
-            {
-             * 
-            picture.mName;
-            picture.Location.X;
-            picture.Location.Y;
-            picture.Size.Width;
-            picture.SIze.Height;
-            }
-             */
+            this.mXMLAdapter.NodeSetting(this.mListObjects);
         }
         #endregion
     }

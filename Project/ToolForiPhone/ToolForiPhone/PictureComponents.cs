@@ -40,7 +40,7 @@ namespace ToolForiPhone
         public int mTag; //이미지 tag
         public int mIndexNumber; //list index
         public int mControllerNumber; // ViewController number
-        public int[] mSaveLocationImage = new int[2]; //UIViewController의 Image 어디에 붙어 있는지 추적하기 위해
+        public Point mSaveLocation;//UIViewController의 Image 어디에 붙어 있는지 추적하기 위해
         public Size mSaveSizeImage;
 
         public PictureComponents(ImageList list, int index, string name, int cnt, int tag, Form1 form)
@@ -59,10 +59,8 @@ namespace ToolForiPhone
 
             this.Location = new Point(1, 30);
             this.Size = this.ChoiceImageSize(name);
-            this.mSaveSizeImage = this.Size;
-
-            this.mSaveLocationImage[0] = this.Location.X;
-            this.mSaveLocationImage[1] = this.Location.Y;
+            this.mSaveSizeImage = new Size( this.Size.Width, this.Size.Height);
+            this.mSaveLocation = new Point( this.Location.X, this.Location.Y );
 
             //pictureBox의 propertyGrid를 Custom하여 보여준다.
             this.mPropertyGrid = new PropertyGridCustom();
@@ -105,7 +103,7 @@ namespace ToolForiPhone
             }
             else //0일 때 원상복귀
             {
-                this.Location = new Point( this.mSaveLocationImage[0], this.mSaveLocationImage[1] );
+                this.Location = new Point( this.mSaveLocation.X, this.mSaveLocation.Y );
                 this.Size = this.mSaveSizeImage;
             }
 
@@ -161,8 +159,7 @@ namespace ToolForiPhone
 
             if (this.mIncrease == 0) //원본에서의 위치 저장
             {
-                this.mSaveLocationImage[0] = this.Location.X;
-                this.mSaveLocationImage[1] = this.Location.Y;                
+                this.mSaveLocation = this.Location;          
             }
 
             this.Focus();
