@@ -12,7 +12,7 @@ namespace ToolForiPhone
         ArrayList mListObjects; //Object Manage List
         int mIndexNumber; //PictureBox Couonting 
         int mSelectedNumber;
-        int mWheelCnt;
+        public int mWheelCnt;
         PictureComponents mSelectedControl; 
 
         public Form1()
@@ -58,7 +58,7 @@ namespace ToolForiPhone
 
         private void panel1_MouseWheel( object sender, MouseEventArgs e)
         {
-            int sign = 1;
+            int sign = 0;
             if (e.Delta / 120 > 0)
             {
                 if (this.mWheelCnt >= 0) //원본보다 확대를 하진 않는다.
@@ -76,13 +76,14 @@ namespace ToolForiPhone
                 picture.ChangeSize(sign);
 
             panel1.Invalidate();
+            propertyGrid1.Refresh();
         }
 
         private void panel1_KeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if( this.mSelectedControl != null )
+            if (this.mSelectedControl != null)
             {
-                Point newLocation = new Point( this.mSelectedControl.Location.X , this.mSelectedControl.Location.Y );
+                Point newLocation = new Point(this.mSelectedControl.Location.X, this.mSelectedControl.Location.Y);
                 switch (e.KeyCode)
                 {
                     case Keys.Left:
@@ -95,9 +96,11 @@ namespace ToolForiPhone
                         this.mSelectedControl.Location = new Point(newLocation.X, newLocation.Y - 1);
                         break;
                     case Keys.Down:
-                        this.mSelectedControl.Location = new Point(newLocation.X, newLocation.Y + 1 );
+                        this.mSelectedControl.Location = new Point(newLocation.X, newLocation.Y + 1);
                         break;
                 }
+                this.mSelectedControl.ReSettingProperty();
+                propertyGrid1.Refresh();
             }
         }
 
@@ -108,8 +111,6 @@ namespace ToolForiPhone
 
             panel1.Invalidate();
             PictureComponents sender = ((PictureComponents)this.mListObjects[num]);
-
-            propertyGrid1.Refresh();
             propertyGrid1.SelectedObject = sender.PropertyGrid;
 
             if (this.mSelectedControl == null)
@@ -150,7 +151,7 @@ namespace ToolForiPhone
 
             sender.Size = newSize;
             sender.Location = newPosition;
-            sender.ResizeProperty(newPosition, newSize);
+            sender.ReSettingProperty();
             sender.Invalidate();
             propertyGrid1.Refresh();
         }
@@ -161,8 +162,6 @@ namespace ToolForiPhone
 
             PictureComponents picture = new PictureComponents(imageList1, item.ImageIndex, item.Text, this.mIndexNumber, Convert.ToInt32(item.Tag), this);
             picture.Show();
-            Point newPosition = new Point(1, 30); //초기위치
-            picture.Location = newPosition;
             picture.Focus();
 
             this.mListObjects.Add(picture);
@@ -174,6 +173,7 @@ namespace ToolForiPhone
                 picture.BringToFront();
 
             this.mIndexNumber++;
+            propertyGrid1.Refresh();
         }
 
         #endregion
