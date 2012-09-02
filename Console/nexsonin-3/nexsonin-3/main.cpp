@@ -32,9 +32,9 @@ int main()
 
 	CTree tree;
 	tree.InitWithTxt();
-	tree.DisplayMatrix(); //인접행렬 처음 생성 후 출력
+	//tree.DisplayMatrix(); //인접행렬 처음 생성 후 출력
 	tree.Start();
-	//tree.DisplayMatrix(); //인접행렬 마지막 최적 길 찾기 위한
+	tree.DisplayMatrix(); //인접행렬 마지막 최적 길 찾기 위한
 	tree.Result();
 	threadResult = false;
 	cout << "걸린 시간 : " << t2 - t1 << "가끔씩 -값은 계산이 너무 빨라서.." << endl;

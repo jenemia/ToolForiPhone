@@ -216,27 +216,33 @@ void CTree::ApproachNodeInsert(int distance, CNode* preNode, int nowID)
 				{
 					continue;
 				}
-				else if( !mExtraApproachNode.empty() )
+				else if( isIntList(id) ) //지워질 노드들이 큐에 들어가지 않도록
 				{
-					list<int>::iterator iter;
-					for( iter = mExtraApproachNode.begin(); iter!=mExtraApproachNode.end(); iter++ )
-					{
-						for( this->mIterNode=this->mListPassNode.begin(); mIterNode!=this->mListPassNode.end(); this->mIterNode++)
-						{
-							if( (*this->mIterNode)->mID == *iter )
-							{
-								this->mListPassNode.remove(*this->mIterNode);
-								break;
-							}
-						}
-
-					}
 					continue;
 				}
 				else
 					temp.push( id );
 			}
 			this->mQueueWorkLoad = temp;
+
+			if( !mExtraApproachNode.empty() ) //삭제할 노드의 인접노드들 지우기
+			{
+				bool con = true;
+				list<int>::iterator iter;
+				for( iter = mExtraApproachNode.begin(); iter!=mExtraApproachNode.end(); iter++ )
+				{
+					for( this->mIterNode=this->mListPassNode.begin(); mIterNode!=this->mListPassNode.end(); this->mIterNode++)
+					{
+						if( (*this->mIterNode)->mID == *iter ) //객체 얻기 위함.
+						{
+							this->mListPassNode.remove(*this->mIterNode);
+							break;
+						}
+					}
+
+				}
+				mExtraApproachNode.clear();
+			}
 		}
 		else
 		{ //이전 노드가 더 최소비용이라면 아무것도 안하고 끝
@@ -250,6 +256,20 @@ void CTree::ApproachNodeInsert(int distance, CNode* preNode, int nowID)
 	this->mQueueWorkLoad.push(apTemp->mID); //현재 노드는 다음에 처리해야 할 노드
 	this->mListPassNode.push_back(apTemp);//한번이라고 거친 노드를 저장
 	//this->mListPassNode[apTemp->mID] = apTemp; 
+}
+
+bool CTree::isIntList(int search )
+{
+	if(  !mExtraApproachNode.empty() )
+	{
+		list<int>::iterator iter;
+		for( iter = mExtraApproachNode.begin(); iter!=mExtraApproachNode.end(); iter++ )
+		{
+			if( *iter == search )
+				return true;
+		}
+	}
+	return false;
 }
 
 void CTree::BlockMatrix(int row, int col)

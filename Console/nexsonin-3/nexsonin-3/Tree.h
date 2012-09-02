@@ -34,6 +34,7 @@ private :
 	void Insert(int id); //주유소 id를 통해 객체 넣기
 	void ApproachNodeInsert( int distance, CNode* preNode, int nowID );
 	void BlockMatrix( int row, int col );
+	bool isIntList( int search );
 public:
 	
 	CTree(void);

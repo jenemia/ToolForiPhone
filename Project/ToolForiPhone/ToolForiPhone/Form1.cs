@@ -25,6 +25,7 @@ namespace ToolForiPhone
 
             this.mWheelCnt = 0;
             panel1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseWheel);
+            panel1.PreviewKeyDown += new PreviewKeyDownEventHandler(this.panel1_KeyDown);
         }
 
         #region form1 and in form1 controls event
@@ -57,28 +58,46 @@ namespace ToolForiPhone
 
         private void panel1_MouseWheel( object sender, MouseEventArgs e)
         {
-            if (e.Delta / 120 > 0)//위로
+            int sign = 1;
+            if (e.Delta / 120 > 0)
             {
-                this.mWheelCnt += 10;
-                foreach( PictureComponents picture in this.mListObjects ) //picutrebox 크기를 늘인다.
-                {
-                    picture.Size = new Size(picture.Size.Width + 10, picture.Size.Height + 10);
-                    picture.mIncrease++;
-                }
-                panel1.Invalidate();
-
-                Console.WriteLine("Wheel UP : {0}" , this.mWheelCnt );
+                if (this.mWheelCnt >= 0) //원본보다 확대를 하진 않는다.
+                     return;
+                this.mWheelCnt += 1;
+                sign = 1;
             }
-            else //아래로
+            else
             {
-                this.mWheelCnt -= 10;
-                foreach (PictureComponents picture in this.mListObjects)
+                this.mWheelCnt -= 1;
+                sign = -1;
+            }
+
+            foreach (PictureComponents picture in this.mListObjects) //picutrebox 크기를 늘인다.
+                picture.ChangeSize(sign);
+
+            panel1.Invalidate();
+        }
+
+        private void panel1_KeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if( this.mSelectedControl != null )
+            {
+                Point newLocation = new Point( this.mSelectedControl.Location.X , this.mSelectedControl.Location.Y );
+                switch (e.KeyCode)
                 {
-                    picture.Size = new Size(picture.Size.Width - 10, picture.Size.Height - 10);
-                    picture.mIncrease--;
+                    case Keys.Left:
+                        this.mSelectedControl.Location = new Point(newLocation.X - 1, newLocation.Y);
+                        break;
+                    case Keys.Right:
+                        this.mSelectedControl.Location = new Point(newLocation.X + 1, newLocation.Y);
+                        break;
+                    case Keys.Up:
+                        this.mSelectedControl.Location = new Point(newLocation.X, newLocation.Y - 1);
+                        break;
+                    case Keys.Down:
+                        this.mSelectedControl.Location = new Point(newLocation.X, newLocation.Y + 1 );
+                        break;
                 }
-                panel1.Invalidate();
-                Console.WriteLine("Wheel Down : {0} ", this.mWheelCnt );
             }
         }
 
@@ -103,10 +122,20 @@ namespace ToolForiPhone
             }
         }
 
+        //PictureComponents에서 호출 되는 함수
         public void PictureBoxMouseUp()
         {
-            if (0 != this.mSelectedControl.mTag)
-                this.mSelectedControl.mControllerNumber = this.WhereViewController(this.mSelectedControl);
+            this.propertyGrid1.Invalidate();
+            this.Focus();
+            try
+            {
+                if (0 != this.mSelectedControl.mTag)
+                    this.mSelectedControl.mControllerNumber = this.WhereViewController(this.mSelectedControl);
+            }
+            catch( NullReferenceException )
+            {
+
+            }
         }
 
         #endregion
@@ -159,7 +188,6 @@ namespace ToolForiPhone
                     if( (picture.Location.X <= sender.Location.X) && ( picture.Location.X + picture.Size.Width >= sender.Location.X ) && 
                         (picture.Location.Y <= sender.Location.Y) && ( picture.Location.Y + picture.Size.Height >= sender.Location.Y ) ) //ViewController 안에 있을 때
                     {
-                        Console.WriteLine(picture.mIndexNumber);
                         return picture.mIndexNumber;
                     }
                 }

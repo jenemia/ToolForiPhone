@@ -30,7 +30,8 @@ namespace ToolForiPhone
 
         //계산등에 필요한 변수들
         Direction mDirection = Direction.None;
-        public int[] mCoordinateInImage = new int[2]; //UIViewController의 Image 어디에 붙어 있는지 추적하기 위해
+        int[] mSaveLocationImage = new int[2]; //UIViewController의 Image 어디에 붙어 있는지 추적하기 위해
+        Size mSaveSizeImage;
         bool isBorder = false;
         bool isMouseLeft = false;
         public int mIncrease;
@@ -49,6 +50,7 @@ namespace ToolForiPhone
             this.Image = (Bitmap)manager.GetObject(name);
 
             this.mImage = this.Image;
+            this.Location = new Point(1, 30);
             this.Size = this.ChoiceImageSize(name);
             this.mName = name;
             this.mIndexNumber = cnt;
@@ -56,8 +58,11 @@ namespace ToolForiPhone
             this.mForm = form;
             this.mControllerNumber = -1;
             this.SizeMode = PictureBoxSizeMode.StretchImage;
-            this.Location = new Point(1, 30);
             this.mIncrease = 0;
+
+            this.mSaveLocationImage[0] = this.Location.X;
+            this.mSaveLocationImage[1] = this.Location.Y;
+            this.mSaveSizeImage = this.Size; 
 
             //pictureBox의 propertyGrid를 Custom하여 보여준다.
             this.mPropertyGrid = new PropertyGridCustom();
@@ -83,16 +88,6 @@ namespace ToolForiPhone
             this.mPointMouse = Point.Empty;
         }
 
-        public Size GetSize
-        {
-            get { return this.Size; }
-        }
-
-        public Point GetLocation
-        {
-            get { return this.Location; }
-        }
-
         public void CancelBorder()
         {
             this.isBorder = false;
@@ -103,12 +98,39 @@ namespace ToolForiPhone
             get { return this.mPropertyGrid; }
         }
 
+        public void ChangeSize(int sign)
+        {
+            this.mIncrease = this.mIncrease + 1 * sign;
+            this.Size = new Size(this.Size.Width + (int)(this.Size.Width / 10 * sign),
+                                                this.Size.Height + (int)(this.Size.Height / 10 * sign) );
+
+            Point newPoint = new Point(this.Location.X, this.Location.Y);
+
+            if (0 != this.mIncrease) //휠로 크기 변화가 있을 때
+            {
+                if (this.mTag != 0)
+                {
+                    newPoint.X = newPoint.X + (int)(newPoint.X / 11 * sign);
+                    newPoint.Y = newPoint.Y + (int)(newPoint.Y / 11 * sign);
+                    this.Location = newPoint;
+                }
+            }
+            else //0일 때 원상복귀
+            {
+                this.Location = new Point( this.mSaveLocationImage[0], this.mSaveLocationImage[1] );
+                this.Size = this.mSaveSizeImage;
+            }
+
+            this.Invalidate();
+            Console.WriteLine("Location : {0}, {1}", this.mSaveLocationImage, this.Location);
+        }
+
         private Size ChoiceImageSize(string name)
         {
             Size result = new Size(100, 30);
             if (name.Equals("UIViewController"))
             {
-                result = new Size(365, 700);
+                result = new Size(365, 710);
             }
             else if (name.Equals("UIButton"))
             {
@@ -125,7 +147,7 @@ namespace ToolForiPhone
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-
+            Console.WriteLine(e.Location);
             if (e.Button == MouseButtons.Left)
             {
                 this.mPointMouse = e.Location;
@@ -144,9 +166,22 @@ namespace ToolForiPhone
             //이동된 좌표값으로 수정.                        
             this.mPropertyGrid.Replace("x", this.Location.X);
             this.mPropertyGrid.Replace("y", this.Location.Y);
+            
             this.DrawControlBorder();
             this.isMouseLeft = false;
             this.mForm.PictureBoxMouseUp();
+
+            if (this.mIncrease == 0) //원본에서의 위치 저장
+            {
+                this.mSaveLocationImage[0] = this.Location.X;
+                this.mSaveLocationImage[1] = this.Location.Y;                
+            }
+            else //크기 변환된 후 listView에서 꺼내질 때
+            {
+                this.Size = new Size(this.Size.Width - (int)(this.Size.Width / 10 * this.mIncrease),
+                                                    this.Size.Height - (int)(this.Size.Height / 10 * this.mIncrease));
+            }
+            this.Focus();
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -175,9 +210,6 @@ namespace ToolForiPhone
 
                         this.Location = newLocation;
                         this.Size = newSize;
-                        Console.WriteLine("location : " + e.Location);
-
-                        Console.WriteLine("point : " + this.mPointMouse);
                     }
                     else if (mDirection == Direction.N)
                     {
@@ -198,9 +230,6 @@ namespace ToolForiPhone
                         this.Size = newSize;
                         //pictureBox크기가 변함에 따라 mPointMouse(클릭 지점)도 변해야 한다.
                         this.mPointMouse = new Point(this.mPointMouse.X + pos.X, this.mPointMouse.Y);
-
-                        Console.WriteLine("location : " + e.Location);
-                        Console.WriteLine("point : " + this.mPointMouse);
                     }
                     else if (mDirection == Direction.W)
                     {
